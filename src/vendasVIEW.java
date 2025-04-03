@@ -1,3 +1,8 @@
+
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -14,7 +19,32 @@ public class vendasVIEW extends javax.swing.JFrame {
      */
     public vendasVIEW() {
         initComponents();
+         carregarProdutosVendidos();
     }
+    
+    private void carregarProdutosVendidos() {
+    try {
+        ProdutosDAO produtosdao = new ProdutosDAO();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        
+        // Configurar los nombres de las columnas
+        model.setColumnIdentifiers(new String[]{"ID", "Nome", "Valor", "Status"});
+        model.setRowCount(0); // Limpiar la tabla
+        
+        ArrayList<ProdutosDTO> vendidos = produtosdao.listarProdutosVendidos();
+        
+        for (ProdutosDTO produto : vendidos) {
+            model.addRow(new Object[]{
+                produto.getId(),
+                produto.getNome(),
+                produto.getValor(),
+                produto.getStatus()
+            });
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Erro ao carregar produtos vendidos: " + e.getMessage());
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -37,18 +67,20 @@ public class vendasVIEW extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Nome", "Valor", "Title 4"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
 
         btnVoltar.setText("Voltar");
+        btnVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVoltarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -82,6 +114,15 @@ public class vendasVIEW extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+    btnVoltar.setText("Voltar");
+    btnVoltar.addActionListener(new java.awt.event.ActionListener() {
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        dispose(); // Cierra solo esta ventana, no toda la aplicación
+    }
+});
+    }//GEN-LAST:event_btnVoltarActionPerformed
 
     /**
      * @param args the command line arguments
